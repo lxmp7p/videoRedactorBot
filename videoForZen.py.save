@@ -1,0 +1,30 @@
+import telebot
+import urllib.request
+import os
+import config
+from thread import start_new_thre
+bot = telebot.TeleBot(config.token)
+
+path_script = '/root/zenVideoRotate/'
+fix = 'root/zenVideoRotate/'
+
+def delete_files(file_path):
+	file_path = '/' + str(file_path)
+	os.system('rm ' + path_script + file_path)
+	os.system('rm ' + path_script + 'video.mp4')
+
+
+@bot.message_handler(content_types=["video"])
+def content_document(message):
+	file_info = bot.get_file(video_id)
+	download = 'http://api.telegram.org/file/bot' + config.token + '/' + file_info.file_path
+	print(download)
+	urllib.request.urlretrieve(download,  file_info.file_path)
+	os.system('ffmpeg -i ' + path_script + file_info.file_path + ' -vf "hflip" -c:a copy video.mp4')
+	video = open(path_script + 'video.mp4', 'rb')
+	bot.send_video(message.chat.id, video)
+	video.close()
+	delete_files(file_info.file_path)
+
+
+bot.polling() # запускаем бота
