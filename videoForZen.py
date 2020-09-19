@@ -5,10 +5,10 @@ import config
 from random import randint
 bot = telebot.TeleBot(config.token)
 
-path_script = '/root/zenVideoRotate/'
-fix = 'root/zenVideoRotate/'
+path_script = '/root/videoRedactorBot/'
+fix = 'root/videoRedactorBot/'
 
-def delete_files(file_path, FileName, temp):
+def delete_files(file_path, FileName):
 	file_path = '/' + str(file_path)
 	os.system('rm ' + path_script + file_path)
 	os.system('rm ' + path_script + FileName)
