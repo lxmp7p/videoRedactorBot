@@ -12,7 +12,6 @@ def delete_files(file_path, FileName, temp):
 	file_path = '/' + str(file_path)
 	os.system('rm ' + path_script + file_path)
 	os.system('rm ' + path_script + FileName)
-	os.system('rm ' + path_script + temp)
 
 
 @bot.message_handler(content_types=["video"])
@@ -22,14 +21,9 @@ def content_document(message):
 	download = 'http://api.telegram.org/file/bot' + config.token + '/' + file_info.file_path
 	FileName = str(randint(10000,99999)) + '.mp4'
 	urllib.request.urlretrieve(download,  file_info.file_path)
-	os.system('ffmpeg -i ' + path_script + file_info.file_path + ' -fflags +bitexact -flags:v +bitexact -flags:a +bitexact -vf "hflip" -c:a copy ' + FileName)
-	temp = FileName
-	FileName = 'a' + FileName
-	os.system('ffmpeg -i ' + path_script + file_info.file_path + ' -fflags +bitexact -flags:v +bitexact -flags:a +bitexact -vf eq=brightness=0.06:saturation=2  -c:a copy ' + FileName)
-	#path = path_script + NameFile
-	#print(path)
+	os.system('ffmpeg -i ' + path_script + file_info.file_path + ' -fflags +bitexact -flags:v +bitexact -flags:a +bitexact -vf "hflip,crop=500:700:200:100,eq=brightness=0.08:saturation=2" -c:a copy ' + FileName)
 	video = open(path_script + FileName, 'rb')
-	bot.send_video(message.chat.id, video, temp)
+	bot.send_video(message.chat.id, video, FileName)
 	video.close()
 	delete_files(file_info.file_path, FileName)
 
